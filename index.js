@@ -1,20 +1,29 @@
 
-let board=[ [5,3,0,0,7,0,0,0,0],
-            [6,0,0,1,9,5,0,0,0],
-            [0,9,8,0,0,0,0,6,0],
-            [8,0,0,0,6,0,0,0,3],
-            [4,0,0,8,0,3,0,0,1],
-            [7,0,0,0,2,0,0,0,6],
-            [0,6,0,0,0,0,2,8,0],
-            [0,0,0,4,1,9,0,0,5],
-            [0,0,0,0,8,0,0,7,9]];
+// let board=[ [5,3,0,0,7,0,0,0,0],
+//             [6,0,0,1,9,5,0,0,0],
+//             [0,9,8,0,0,0,0,6,0],
+//             [8,0,0,0,6,0,0,0,3],
+//             [4,0,0,8,0,3,0,0,1],
+//             [7,0,0,0,2,0,0,0,6],
+//             [0,6,0,0,0,0,2,8,0],
+//             [0,0,0,4,1,9,0,0,5],
+//             [0,0,0,0,8,0,0,7,9]];
+
+ let board=[ [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0]];
         
-var boardCopy=JSON.parse(JSON.stringify(board));
 
 function nextEmpty(board){
     for(let i=0;i<9;i++){
         for(let j=0;j<9;j++){
-            if(board[i][j]===0){
+            if(board[i][j]===0 || board[i][j]==""){
                 return [i,j];
             }
         }
@@ -89,11 +98,11 @@ for(let r=0;r<9;r++){
     for(let c=0;c<9;c++){
         var cell=document.createElement('input');
         cell.id=`${r}-${c}`;
-        if(board[r][c]!==0){
-            cell.value=board[r][c];
-            cell.classList.add("cell-start");
-            cell.disabled=true;
-        }
+        // if(board[r][c]!==0){
+        //     cell.value=board[r][c];
+        //     cell.classList.add("cell-start");
+        //     cell.disabled=true;
+        // }
         if(r==2 || r==5){
             cell.classList.add("horizontal");
         }
@@ -104,6 +113,7 @@ for(let r=0;r<9;r++){
         board_.appendChild(cell);
     }
 }
+shuffle();
 console.log(board);
 }
 
@@ -124,10 +134,10 @@ function fillBoard(board){
         }
     }
 }
-
+var tempboard;
 function reset(){
     console.log("reset");
-    fillBoard(boardCopy);
+    fillBoard(tempboard);
     for(let i=0;i<9;i++){
         for(let j=0;j<9;j++){
             let cell=document.getElementById(`${i}-${j}`);
@@ -176,4 +186,39 @@ function validate(){
         res.style.color="red";
     }
 
+}
+
+function shuffle(){
+    for(let i=0;i<9;i++){
+        for(let j=0;j<9;j++){
+            board[i][j]=0;
+        }
+    }
+    console.log(board)
+    for(let i=0;i<9;i++){
+        for(let j=0;j<9;j++){
+                let randomcell=document.getElementById(`${i}-${j}`);
+                randomcell.value="";
+                randomcell.disabled=false;
+                randomcell.classList.remove('cell-start');
+        }
+    }
+
+    for(let i=0;i<30;i++){
+        let r=Math.floor(Math.random()*9);
+        let c=Math.floor(Math.random()*9);
+        let randomcell=document.getElementById(`${r}-${c}`);
+        let v=1+Math.floor(Math.random()*9);
+        if(isValid(board,r,c,v)){
+        randomcell.value=v;
+        board[r][c]=v;
+        randomcell.classList.add("cell-start");
+        randomcell.disabled=true;
+        }
+    }
+     var temp=JSON.parse(JSON.stringify(board));
+     if(!solveSudoku(temp)){
+        shuffle();
+     }
+     tempboard=JSON.parse(JSON.stringify(board));
 }
