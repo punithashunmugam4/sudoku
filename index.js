@@ -155,10 +155,8 @@ function validate(){
         for(let j=0;j<9;j++){
             let cell=document.getElementById(`${i}-${j}`);
             let val=Number(cell.value);
-            if(cell.value==="" || isNaN(cell.value)){   
-                cell.classList.remove('correct');
-                cell.classList.add('incorrect');
-                flag=false;
+            if(cell.value===""){   
+                continue;
             }
            else if(board[i][j]===0 && isValid(board,i,j,val)){
             console.log(cell.value);
